@@ -1,0 +1,11 @@
+{% extends "lib/base_generic.html" %}
+
+{% block content %}
+    <h3>Author List:</h3>
+
+    {% for author in author_list %}
+    <p><a href="{% url 'author.get_absolute_url'}">{{ author.last_name }}, {{ author.first_name }}</a></p>
+    <p>Birthday: {{ author.date_of_birth }}</p>
+    <hr>
+    {% endfor %}
+{% endblock %}

@@ -21,11 +21,9 @@ from django.conf import global_settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lib/',include('Lib.urls')),
+    path('',include('Lib.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 # urlpatterns += static(global_settings.STATIC_URL, document_root=global_settings.STATIC_ROOT)
 
-urlpatterns += [
-    path('accounts/', include('django.contrib.auth.urls')),
-]
