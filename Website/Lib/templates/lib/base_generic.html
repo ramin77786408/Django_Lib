@@ -36,19 +36,23 @@
             {% block sidebar %}
             <ul class="sidebar-nav">
                 {% if user.is_authenticated %}
-                <li>Hello {{ user.username }}</li>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button class="button" type="submit" >logout</button>
-                </form>
+                    <li>Hello {{ user.username }}</li>
+                    
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button" type="submit" >logout</button>
+                    </form>
                 
                 {% else %}
-                <li><a href="{% url 'login' %}">Log In</a></li>
+                    <li><a href="{% url 'login' %}">Log In</a></li>
+                    
+                
                 {% endif %}
                 <li><a href="/admin">Admin Page</a></li>
                 <li><a href="{% url 'Lib:index' %}">Home</a></li>
                 <li><a href="{% url 'Lib:book_list' %}">All Books </a></li>
                 <li><a href="{% url 'Lib:authors' %}">All Authors</a></li>
+                <li><a href="{% url 'Lib:my-borrowed' %}" >MY Borrows</a></li>
             </ul>
             {% endblock %}
             </div>

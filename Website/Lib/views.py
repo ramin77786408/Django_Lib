@@ -2,6 +2,7 @@ from typing import Any
 from django.shortcuts import render
 from django.views import generic
 from . import models
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # def index(request,):
 #     num_books = models.Book.objects.all().count()
@@ -38,3 +39,13 @@ class BookDetailView(generic.DetailView):
 class AuthorListView(generic.ListView):
     model = models.Author
     template_name = 'lib/author_list.html'
+
+
+class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
+    model = models.BookInstance
+    template_name = 'lib/bookinstance_list_borrowed_user.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.BookInstance.objects.filter(borrower=self.request.user).filter(
+            status__exact='o').order_by('due_back')
