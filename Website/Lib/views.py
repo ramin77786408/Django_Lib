@@ -1,20 +1,15 @@
 from typing import Any
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from . import models
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
+from django.http import HttpResponseRedirect
+import datetime
+from .forms import RenewBookForm
 
-# def index(request,):
-#     num_books = models.Book.objects.all().count()
-#     num_instances = models.BookInstance.objects.all().count()
-#     num_instances_available = models.BookInstance.objects.filter(status__exact='a').count()
-#     num_authors = models.Author.objects.count()
+from django.urls import reverse
 
-#     return render(
-#         request,
-#         'lib/index.html',
-#         context={'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors},
-#     )
 
 class Index(generic.TemplateView):
     template_name = 'lib/index.html'
@@ -49,3 +44,23 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return models.BookInstance.objects.filter(borrower=self.request.user).filter(
             status__exact='o').order_by('due_back')
+    
+
+
+# @permission_required('Lib.can_mark_returned')
+def renew_book_librarian(request, pk):
+    
+    book_instance = get_object_or_404(models.BookInstance, pk=pk)
+    
+    if(request.method == 'POST'):
+        form = RenewBookForm(request.POST)
+        if form.is_valid():
+            book_instance.due_back = form.cleaned_data['renewal_date']
+            book_instance.save()
+            return HttpResponseRedirect(reverse('Lib:my-borrowed'))
+    else:
+        proposed = datetime.date.today() + datetime.timedelta(weeks=3)
+        form = RenewBookForm(initial={'renewal_date': proposed})
+
+    return render(request, 'lib/book_renew_librarian.html', {'form': form, 'book_instance': book_instance})
+    

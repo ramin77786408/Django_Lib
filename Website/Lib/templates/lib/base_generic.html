@@ -35,6 +35,7 @@
             <div class="col-sm-2">
             {% block sidebar %}
             <ul class="sidebar-nav">
+                
                 {% if user.is_authenticated %}
                     <li>Hello {{ user.username }}</li>
                     
@@ -45,7 +46,7 @@
                 
                 {% else %}
                     <li><a href="{% url 'login' %}">Log In</a></li>
-                    
+                    <li><a href="{% url 'Users:signup' %}" >Sign Up</a></li>
                 
                 {% endif %}
                 <li><a href="/admin">Admin Page</a></li>
