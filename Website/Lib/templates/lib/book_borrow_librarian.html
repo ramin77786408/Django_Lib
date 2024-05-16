@@ -1,0 +1,15 @@
+{% extends "lib/base_generic.html" %}
+{% block content %}
+
+<h2>Book : {{ book.title }}</h2>
+<p>Borrower: {{ request.user }}</p>   
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form }}
+    </table>
+    <input type="submit" value="Borrow" />
+</form>
+
+{% endblock %}
+

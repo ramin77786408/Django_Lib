@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseRedirect
 import datetime
-from .forms import RenewBookForm
+from .forms import RenewBookForm,GetBookForm
 
 from django.urls import reverse
 
@@ -64,3 +64,25 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'lib/book_renew_librarian.html', {'form': form, 'book_instance': book_instance})
     
+
+def borrow_book(request, pk):
+    print("User :",request.user)
+    print("pk :",)
+    print("request.user.id :",request.user.id)
+    print("method", request.method)
+    book = get_object_or_404(models.Book, pk=pk)
+
+    if(request.method == 'POST'):
+        book_instance = models.BookInstance()
+        form = GetBookForm(request.POST)
+        if form.is_valid():
+            book_instance.status = 'o'
+            book_instance.book = book
+            book_instance.borrower = request.user
+            book_instance.save()
+            return HttpResponseRedirect(reverse('Lib:my-borrowed'))
+        
+    else:
+        proposed = datetime.date.today() + datetime.timedelta(weeks=2)
+        form = GetBookForm(initial={'due_back': proposed,'borrower':request.user})
+    return render(request, 'lib/book_borrow_librarian.html', {'form': form, 'book': book})
