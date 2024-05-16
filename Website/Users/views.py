@@ -9,9 +9,12 @@ def sign_up(request):
         form = Signup(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, email=email,
+                                            first_name=first_name,last_name=last_name, password=password)
             user.save()
             return render(request,'registration/thanks.html')
             

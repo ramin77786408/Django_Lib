@@ -47,9 +47,15 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     
 
 
-# @permission_required('Lib.can_mark_returned')
+# @permission_required('Lib')
 def renew_book_librarian(request, pk):
-    
+
+    print("staff :",request.user.get_username())
+    permission = request.user.get_all_permissions()
+    for per in permission:
+        print("permisssion : ",per)
+   
+
     book_instance = get_object_or_404(models.BookInstance, pk=pk)
     
     if(request.method == 'POST'):

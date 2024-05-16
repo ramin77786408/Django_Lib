@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
 import uuid
+
 app_name = 'Lib'
+
 urlpatterns = [
     path('', views.Index.as_view(), name='index'),
     path('books/',views.BookListView.as_view(), name='book_list'),
